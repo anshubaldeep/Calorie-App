@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './index.css';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
@@ -6,8 +7,9 @@ import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } f
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Typography } from '@mui/material';
 
-export default function BasicTextFields({ title }) {
+export default function BasicTextFields({ title, label }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -68,16 +70,20 @@ export default function BasicTextFields({ title }) {
         }
     };
     return (
-        <div>
-            <div className="heading-container">
-                <h3>
-                    {title} Form
-                </h3>
+        <div className="heading-container">
+            <div>
+                <Typography variant='h4' sx={{ fontWeight: 'bold' }}>
+                    {label}
+                </Typography>
             </div>
             <Box
                 component="form"
                 sx={{
                     '& > :not(style)': { m: 1, width: '25ch' },
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '2em'
                 }}
                 noValidate
                 autoComplete="off"

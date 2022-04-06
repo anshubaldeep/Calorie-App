@@ -17,9 +17,14 @@ export default function Home() {
 
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
+        let user = sessionStorage.getItem('User')
 
         if (authToken) {
-            navigate('/admin')
+            if(user === 'admin@admin.com'){
+                navigate('/admin')
+            } else {
+                navigate('/home')
+            }
         }
 
         if (!authToken) {

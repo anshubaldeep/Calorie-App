@@ -11,10 +11,13 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
       <div className="App">
+      <nav className='App-header'>
+        Calories App
+      </nav>
       <>
           <Routes>
-            <Route path='/login' element={<Form title="Login" />} />
-            <Route path='/register' element={<Form title="Register" />} />
+            <Route path='/login' element={<Form title="Login" label= "Login Form 🔑"/>} />
+            <Route path='/register' element={<Form title="Register" label= "Register Form 📙"/>} />
             <Route
               path='/home'
               element={
