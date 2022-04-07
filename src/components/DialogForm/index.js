@@ -8,13 +8,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateTimePicker from '@mui/lab/DateTimePicker';
-import {formItems} from  './helper';
 
-export default function FormDialog({open, onClose, data, handleChange, addItem}) {
- 
+
+export default function FormDialog({open, onClose, data, handleChange, addItem, update=false, formItems}) {
+  console.log(data)  
   return (
     <Dialog open={open} onClose={onClose}>
-    <DialogTitle>Add Meal</DialogTitle>
+    <DialogTitle>{update ? 'Update' : 'Add'} Meal &#127791;</DialogTitle>
     <DialogContent>
         {React.Children.toArray(formItems.map(item=> item.type !== 'date' ? (
             <TextField
@@ -43,7 +43,7 @@ export default function FormDialog({open, onClose, data, handleChange, addItem})
     </DialogContent>
     <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={addItem}>Add</Button>
+        <Button onClick={update ? ()=>addItem(data?.id) : ()=>addItem()}>{update ? 'Update' : 'Add'}</Button>
     </DialogActions>
     </Dialog>
   );

@@ -6,11 +6,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { rowTitles } from './helper';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { toDate } from 'firebase/firestore';
 import { format, parse, parseJSON } from 'date-fns'
 
-export default function BasicTable({rows}) {
+export default function BasicTable({rows, rowTitles, admin=false, handleEdit = ()=>{}, handleDelete = ()=>{}}) {
 return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -27,7 +29,13 @@ return (
             >
                 {React.Children.toArray(rowTitles.map((r,id)=>(
                     <TableCell component={id ===0 ? "th" : "td"} scope={id === 0 ? "row" : ""} align={id!==0 ? "right" : "left"}>
-                        {r.value !== 'consumedAt' ? row[r.value] : format(parseJSON(row?.[r.value].toDate()), 'MM/dd/yyyy hh:mm a')}
+                        {r.value !== 'operations' ? r.value !== 'consumedAt' ? admin ? row?.data[r.value] : row[r.value] : admin ? format(parseJSON(row?.data?.[r.value].toDate()), 'MM/dd/yyyy hh:mm a') : format(parseJSON(row?.[r.value].toDate()), 'MM/dd/yyyy hh:mm a') : <></>}
+                        {r?.value === 'operations' && admin ? (
+                          <div>
+                            <IconButton onClick={()=>handleEdit(row?.id)}><EditIcon/></IconButton>
+                            <IconButton onClick={()=>handleDelete(row?.id)}><DeleteIcon/></IconButton>
+                          </div>
+                        ) : <></>}
                     </TableCell>
                 )))}
             </TableRow>

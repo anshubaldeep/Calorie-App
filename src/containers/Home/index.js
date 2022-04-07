@@ -16,6 +16,8 @@ import AddItemDialog from '../../components/DialogForm';
 import Table from '../../components/Table';
 import { format } from 'date-fns';
 import { Typography } from '@mui/material';
+import { formItems, rowTitles } from '../../helper';
+
 
 export default function Home() {
     const [addItemDialog, setAddItemDialog] = useState(false);
@@ -25,12 +27,13 @@ export default function Home() {
     const [loading, setLoading] = useState(false);
     const [thresholdReached, setThresholdReached] = useState(false);
     const [monthlyPriceThresholdReached, setMonthlyPriceThresholdReached] = useState(false);
-    const [data, setItemData] = useState({
+    const initialData = {
         itemName: '',
         itemPrice: '',
         itemCalories: '',
         consumedAt: new Date(),
-    });
+    };
+    const [data, setItemData] = useState(initialData);
     const [threshold, setThreshold] = useState(210);
     const [moneyThreshold, setMoneyThreshold] = useState(1000);
     const navigate = useNavigate();
@@ -44,7 +47,7 @@ export default function Home() {
     
     const getProducts = (date) => {
         setLoading(true);
-        const q = query(collection(db, 'FoodItems'), where("emailUsed", "==", sessionStorage.getItem('User')), where("dateString", "==", format(date, 'MM/dd/yyyy'), orderBy("consumedAt", "asc")));
+        const q = query(collection(db, 'FoodItems'), where("emailUsed", "==", sessionStorage.getItem('User')), where("dateString", "==", format(date, 'MM/dd/yyyy')), orderBy("consumedAt", "asc"));
         onSnapshot(q, (querySnapshot) => {
             console.log(querySnapshot.docs.map(d=>d.data()))
             setproducts(querySnapshot.docs.map(d=>d.data()))
@@ -53,7 +56,7 @@ export default function Home() {
     }
     
     const getProductsForMonth = (date) => {
-        const q = query(collection(db, 'FoodItems'), where("emailUsed", "==", sessionStorage.getItem('User')), where("monthString", "==", format(date, 'MM'), orderBy("consumedAt", "asc")));
+        const q = query(collection(db, 'FoodItems'), where("emailUsed", "==", sessionStorage.getItem('User')), where("monthString", "==", format(date, 'MM')), orderBy("consumedAt", "asc"));
         onSnapshot(q, (querySnapshot) => {
             console.log(querySnapshot.docs.map(d=>d.data()))
             setproductsForMonth(querySnapshot.docs.map(d=>d.data()))
@@ -97,6 +100,8 @@ export default function Home() {
             monthString: format(data.consumedAt, 'MM'),
           })
           setAddItemDialog(false);
+          setItemData(initialData);
+          toast.success('Item added successfully')
         } catch (err) {
           alert(err)
           toast.error(err);
@@ -105,9 +110,14 @@ export default function Home() {
     
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
-
+        let user = sessionStorage.getItem('User')
+    
         if (authToken) {
-            navigate('/home')
+            if(user === 'admin@admin.com') {
+                navigate('/admin')
+            }else{
+                navigate('/home')
+            }
         }
 
         if (!authToken) {
@@ -189,7 +199,7 @@ export default function Home() {
                     />
                 </LocalizationProvider>
             </div>
-            {loading ? <Loading /> : products.length ? <Table rows={products} /> : <h1>No Items Covered that day!</h1>}
+            {loading ? <Loading /> : products.length ? <Table rows={products} rowTitles={rowTitles} /> : <h1>No Items Covered that day!</h1>}
             <Suspense fallback={<Loading/>}>
                 <AddItemDialog 
                     open={addItemDialog}
@@ -197,6 +207,7 @@ export default function Home() {
                     data={data} 
                     handleChange={handleChange} 
                     addItem={addItem}
+                    formItems={formItems}
                 />
             </Suspense>
         </div>
