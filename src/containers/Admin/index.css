@@ -17,14 +17,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2em;
+    margin-bottom: 0em;
     gap: 1em
 }
 
 @media (max-width: 768px) {
     .adminSection{
         margin: 0;
-        padding: 1.5em;
+        padding: 1rem 2em 1em 1em;
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;

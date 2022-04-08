@@ -11,7 +11,6 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 
 
 export default function FormDialog({open, onClose, data, handleChange, addItem, update=false, formItems}) {
-  console.log(data)  
   return (
     <Dialog open={open} onClose={onClose}>
     <DialogTitle>{update ? 'Update' : 'Add'} Meal &#127791;</DialogTitle>

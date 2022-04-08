@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,12 +12,11 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import Loading from '../../components/Loading';
-import AddItemDialog from '../../components/DialogForm';
 import Table from '../../components/Table';
 import { format } from 'date-fns';
 import { Typography } from '@mui/material';
 import { formItems, rowTitles } from '../../helper';
-
+const AddItemDialog = lazy(() => import('../../components/DialogForm'));
 
 export default function Home() {
     const [addItemDialog, setAddItemDialog] = useState(false);
@@ -49,7 +48,6 @@ export default function Home() {
         setLoading(true);
         const q = query(collection(db, 'FoodItems'), where("emailUsed", "==", sessionStorage.getItem('User')), where("dateString", "==", format(date, 'MM/dd/yyyy')), orderBy("consumedAt", "asc"));
         onSnapshot(q, (querySnapshot) => {
-            console.log(querySnapshot.docs.map(d=>d.data()))
             setproducts(querySnapshot.docs.map(d=>d.data()))
             setLoading(false);
         })
@@ -58,7 +56,6 @@ export default function Home() {
     const getProductsForMonth = (date) => {
         const q = query(collection(db, 'FoodItems'), where("emailUsed", "==", sessionStorage.getItem('User')), where("monthString", "==", format(date, 'MM')), orderBy("consumedAt", "asc"));
         onSnapshot(q, (querySnapshot) => {
-            console.log(querySnapshot.docs.map(d=>d.data()))
             setproductsForMonth(querySnapshot.docs.map(d=>d.data()))
         })
     }  
@@ -66,7 +63,6 @@ export default function Home() {
     const getUserData = () => {
         const q = query(collection(db, 'Users'), where("user", "==", sessionStorage.getItem('User')));
         onSnapshot(q, (querySnapshot) => {
-            console.log(querySnapshot.docs.map(d=>d.data()))
             setMoneyThreshold(querySnapshot.docs.map(d=>d.data())[0].priceLimit);
             setThreshold(querySnapshot.docs.map(d=>d.data())[0].calorieLimit);
         })
@@ -110,10 +106,10 @@ export default function Home() {
     
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
-        let user = sessionStorage.getItem('User')
-    
+        let isAdmin = sessionStorage.getItem('isAdmin')
+
         if (authToken) {
-            if(user === 'admin@admin.com') {
+            if(isAdmin !== '0'){
                 navigate('/admin')
             }else{
                 navigate('/home')
@@ -151,7 +147,6 @@ export default function Home() {
         productsForMonth.length && productsForMonth.map(item => {
             val += item.itemPrice;
         })
-        console.log(val)
         if (val > moneyThreshold) {
             toast.error(`You exceeded your monthly money threshold of ${moneyThreshold} USD in ${format(filterDate, 'LLL')}`);
             setMonthlyPriceThresholdReached(true);

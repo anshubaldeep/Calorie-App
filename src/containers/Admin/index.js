@@ -1,13 +1,14 @@
 import { Button, Typography, Tabs, Tab, Box } from '@mui/material';
 import './index.css';
 import TabPanel from '../../components/TabPanel';
-import Report from './Report';
 import AllRecords from './AllRecords';
-import React, { useEffect, useState } from 'react'
+import React, { lazy, useEffect, useState, Suspense } from 'react'
+import Loading from '../../components/Loading';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+const Report = lazy(() => import('./Report'));
 
 function a11yProps(index) {
     return {
@@ -32,10 +33,9 @@ export default function Admin() {
 
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
-        let user = sessionStorage.getItem('User')
-
+        let isAdmin = sessionStorage.getItem('isAdmin')
         if (authToken) {
-            if(user === 'admin@admin.com'){
+            if(isAdmin !== '0'){
                 navigate('/admin')
             } else {
                 navigate('/home')
@@ -71,7 +71,9 @@ export default function Admin() {
                     <AllRecords />
                 </TabPanel>
                 <TabPanel value={tabValue} index={1}>
-                   <Report />
+                    <Suspense fallback={<Loading />}>
+                        <Report />
+                   </Suspense>
                 </TabPanel>
                 </Box>
             </div>

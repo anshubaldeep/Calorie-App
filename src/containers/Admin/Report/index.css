@@ -1,0 +1,20 @@
+.chartContainer{
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.chartArea{
+    width: 50%;
+}
+
+@media (max-width: 768px) {
+    .chartContainer{
+        flex-direction: column;
+        gap: 2rem;
+        margin-bottom: 1em;
+    }
+    .chartArea{
+        width: 100%;
+    }
+}

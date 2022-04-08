@@ -1,13 +1,13 @@
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import {db} from '../../../firebase-config';
 import {collection, addDoc, Timestamp, onSnapshot, orderBy, where, query, deleteDoc, doc, updateDoc} from 'firebase/firestore';
 import Loading from '../../../components/Loading';
 import Table from '../../../components/Table';
-import AddItemDialog from '../../../components/DialogForm';
 import { formItems, formItemsAdmin, rowTitles } from '../../../helper';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import { Button } from '@mui/material';
+const AddItemDialog = lazy(() => import('../../../components/DialogForm'));
 
 const rowTitlesAdmin = [
     ...rowTitles,
@@ -53,7 +53,6 @@ const AllRecords=()=>{
     }
 
     const handleDelete = async (id) => {
-        console.log(id)
         const taskDocRef = doc(db, 'FoodItems', id)
         try{
           await deleteDoc(taskDocRef)
@@ -65,7 +64,6 @@ const AllRecords=()=>{
       }
 
       const handleUpdateData = async (id) => {
-        console.log(id);
         const taskDocRef = doc(db, 'FoodItems', id)
         try{
           await updateDoc(taskDocRef, {
@@ -141,10 +139,12 @@ const AllRecords=()=>{
     return(
         <>
             <div>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1em' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '1.5em 0em' }}>
                     <Button variant="contained" onClick={handleAddItem}>Add Item</Button>
                 </div>
-                {loading ? <Loading /> : products.length ? <Table rowTitles={rowTitlesAdmin} rows={products} admin handleDelete={handleDelete} handleEdit={handleUpdate} /> : <h1>No Items added in last 7 days!</h1>}
+                <div style={{ overflow: 'auto', maxWidth: '90vw' }}>
+                    {loading ? <Loading /> : products.length ? <Table rowTitles={rowTitlesAdmin} rows={products} admin handleDelete={handleDelete} handleEdit={handleUpdate} /> : <h1>No Items added in last 7 days!</h1>}
+                </div>
             </div>
             <Suspense fallback={<Loading/>}>
                 <AddItemDialog 
