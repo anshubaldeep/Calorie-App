@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {collection, onSnapshot, orderBy, where, query, groupBy, Timestamp} from 'firebase/firestore';
+import {collection, onSnapshot, where, query, Timestamp} from 'firebase/firestore';
 import { db } from '../../../firebase-config';
 import Loading from '../../../components/Loading';
 import BarGraph from '../../../components/BarGraph';
@@ -64,6 +64,7 @@ const Report=()=>{
                 } else {
                     updatedLineData.push({dateString, data: e.itemCalories})
                 }
+                return '';
             });
             const result  = updatedLineData.map(e=>({ dateString: e.dateString, data: Math.round(e.data/totalUsers) }));
             setLineData(result);

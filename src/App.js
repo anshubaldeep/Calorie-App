@@ -1,10 +1,8 @@
-import logo from './logo.svg';
 import './App.css';
 import Form from './components/LoginForm';
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Home from './containers/Home';
 import Admin from './containers/Admin';
-import { app } from './firebase-config';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
