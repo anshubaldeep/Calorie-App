@@ -33,8 +33,8 @@ export default function Home() {
         consumedAt: new Date(),
     };
     const [data, setItemData] = useState(initialData);
-    const [threshold, setThreshold] = useState(210);
-    const [moneyThreshold, setMoneyThreshold] = useState(1000);
+    const [threshold, setThreshold] = useState(null);
+    const [moneyThreshold, setMoneyThreshold] = useState(null);
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -133,7 +133,7 @@ export default function Home() {
         products.length && products.map(item => {
             val += item.itemCalories;
         })
-        if (val > threshold) {
+        if (val > threshold && threshold) {
             toast.error(`You exceeded your calorie threshold of ${threshold} calories on ${format(filterDate, 'do LLL yyyy')}`);
             setThresholdReached(true);
         } else {
@@ -147,7 +147,7 @@ export default function Home() {
         productsForMonth.length && productsForMonth.map(item => {
             val += item.itemPrice;
         })
-        if (val > moneyThreshold) {
+        if (val > moneyThreshold && moneyThreshold) {
             toast.error(`You exceeded your monthly money threshold of ${moneyThreshold} USD in ${format(filterDate, 'LLL')}`);
             setMonthlyPriceThresholdReached(true);
         } else {
@@ -166,14 +166,14 @@ export default function Home() {
                 </div>
             </div>
             {
-                thresholdReached && (
+                thresholdReached && threshold && (
                     <div className='thresholdReached'>
                         <Typography variant='h5'>You exceeded your calorie threshold of {threshold} calories on {format(filterDate, 'do LLL yyyy')}</Typography>
                     </div>
                 )
             }
             {
-                monthlyPriceThresholdReached && (
+                monthlyPriceThresholdReached && moneyThreshold && (
                     <div className='thresholdReached'>
                         <Typography variant='h5'>You exceeded your monthly money threshold of {moneyThreshold} USD in {format(filterDate, 'LLL')}</Typography>
                     </div>
