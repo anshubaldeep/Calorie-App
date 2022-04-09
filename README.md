@@ -2,6 +2,9 @@
 
 This project was created as part of a Toptal Assignment for tracking calories by adding items
 There is also an Admin view where you can perform CRUD operations on all entries.
+
+Kindly view the project demo video present inside the root directory.
+
 Created with ReactJS, Firebase, MaterialUI, Webpack, Recharts and love by - [Baldeep Singh](https://baldeep-singh.netlify.app/) 
 Deployed on : [App Demo](https://calories-app.netlify.app/).
 
